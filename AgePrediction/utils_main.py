@@ -9,3 +9,17 @@ def CACDplot(dataset):
         plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), cmap='gray')
         plt.title(age+14)
     plt.show()
+
+
+def generate_Xy_dataset(self):
+    X = []
+    y = []
+    for index in range(self.__len__()):
+        img, age = self.__getitem__(index)
+        if img is not None:
+            X.append(img)
+            y.append(age)
+        if(index % 10000 == 0):
+            print('Img index:', index)
+
+    return X, y

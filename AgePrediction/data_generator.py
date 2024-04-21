@@ -27,15 +27,3 @@ class CACDDataset():
     def __len__(self):
         return self.y.shape[0]
     
-    def generate_Xy_dataset(self):
-        X = []
-        y = []
-        for index in range(self.__len__()):
-            img, age = self.__getitem__(index)
-            if img is not None:
-                X.append(img)
-                y.append(age)
-            if(index % 10000 == 0):
-                print('Img index:', index)
-
-        return X, y
