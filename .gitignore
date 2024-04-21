@@ -110,3 +110,6 @@ venv.bak/
 
 CACD2000.tar.gz
 tarball-master.zip
+
+CACD2000/*
+CACD200/
