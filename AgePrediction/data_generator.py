@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import warnings
+import numpy as np
 
 class CACDDataset():
     """Custom Dataset for loading CACD face images"""
