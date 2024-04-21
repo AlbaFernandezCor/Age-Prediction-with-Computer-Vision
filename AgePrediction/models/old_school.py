@@ -1,35 +1,67 @@
 import cv2
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
+from math import ceil
+import seaborn as sns
+import matplotlib.pylab as plt
 
  
 class OldSchoolMethod():
 
-    def run(self, X_train, y_train, X_test, y_test):
-        X_train_descriptor = self.preprocesing_X(X_train)
-        X_test_descriptor = self.preprocesing_X(X_test)
-        y_pred, error = self.RFR(X_train_descriptor, y_train, X_test_descriptor, y_test)
+    def run(self, train_dataset, test_dataset):
+        X_train, y_train = self.preprocesing_Xy(train_dataset)
+        X_test, y_test = self.preprocesing_Xy(test_dataset)
+        y_pred, error = self.RFR(X_train, y_train, X_test, y_test)
+        vari = self.MSE(y_test, y_pred)
+        self.plot_results(y_pred, y_test, vari)
         return y_pred, error
 
     def extract_sift_features(self, image):
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         sift = cv2.SIFT_create()
-        keypoints, descriptors = sift.detectAndCompute(gray_image, None)
-        return keypoints, descriptors
+        _, descriptors = sift.detectAndCompute(gray_image, None)
+        return descriptors
 
-    def preprocesing_X(self, X):
-        descriptors = []
-        for image in X:
-            keypoints, descriptors = self.extract_sift_features(image)
-            descriptors.append(descriptors)
-
-        return np.concatenate(descriptors, axis=0)
+    def preprocesing_Xy(self, dataset):
+        X_list = []
+        y_list = []
+        for index in range(ceil(dataset.__len__()*0.01)):
+            img, age = dataset.__getitem__(index)
+            descriptors = self.extract_sift_features(img)
+            y_list.append(age)
+            X_list.append(np.array(np.concatenate(descriptors, axis=0).tolist())[:1000])
+            if (index % 50 == 0):
+                print("Index img: ", index)
+        return X_list, y_list
 
 
     def RFR(self, X_train, y_train, X_test, y_test):
         model = RandomForestRegressor()
-        model.fit(X_train, y_train)
+        model.fit(np.array(X_train), np.array(y_train))
         y_pred = model.predict(X_test)
         errors = np.abs(y_pred - y_test)
         return y_pred, errors
+    
+    def MSE(self, y_real, y_pred):
+        vari = []
+        for i in range(len(y_real)):
+            vari.append((y_pred[i] - y_real[i])**2)
+        
+        return vari
+        
+    def plot_results(self, y_pred, y_test, vari):
+        # Plot y_pred - MSE
+        sns.scatterplot(x=y_pred,y=vari)
+        plt.title('y_pred - MSE')
+        plt.xlabel('y_pred')
+        plt.ylabel('MSE')
+        print("MSE Mean: ", np.array(vari).mean())
+        plt.show()
+        # Plot y_pred - y_test
+        sns.scatterplot(x=y_test,y=y_pred)
+        sns.lineplot(x=y_test, y=y_test)
+        plt.title('y_pred - y_test')
+        plt.xlabel('y_pred')
+        plt.ylabel('y_test')
+        plt.show()
+
