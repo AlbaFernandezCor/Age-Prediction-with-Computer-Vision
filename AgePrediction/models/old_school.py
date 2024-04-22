@@ -4,17 +4,16 @@ from sklearn.ensemble import RandomForestRegressor
 from math import ceil
 import seaborn as sns
 import matplotlib.pylab as plt
-
+from utils_models import generate_RFR_model, generate_predictions, plot_results
  
 class OldSchoolMethod():
 
     def run(self, train_dataset, test_dataset):
         X_train, y_train = self.preprocesing_Xy(train_dataset)
         X_test, y_test = self.preprocesing_Xy(test_dataset)
-        y_pred, error = self.RFR(X_train, y_train, X_test, y_test)
-        vari = self.MSE(y_test, y_pred)
-        self.plot_results(y_pred, y_test, vari)
-        return y_pred, error
+        model = generate_RFR_model(X_train, y_train)
+        y_pred, error = generate_predictions(model, X_test, y_test)
+        plot_results(y_pred, y_test, error)
 
     def extract_sift_features(self, image):
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
