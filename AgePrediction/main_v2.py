@@ -1,6 +1,5 @@
 from data_generator import CACDDataset
 from HYPERPARAMETERS import TRAIN_CSV_PATH, IMAGE_PATH, TEST_CSV_PATH, BATCH_SIZE
-from utils_main import CACDplot, generate_Xy_dataset
 from models.old_school import OldSchoolMethod
 import numpy as np
 import time

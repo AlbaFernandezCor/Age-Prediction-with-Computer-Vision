@@ -16,12 +16,12 @@ class CACDDataset():
         self.y = df['age'].values
 
     def __getitem__(self, index):
-        img = None
-        label = None
+        # img = None
+        # label = None
 
-        if self.img_names[index].isascii():
-            img = cv2.imread(os.path.join(self.img_dir, self.img_names[index]))
-            label = self.y[index]
+        # if self.img_names[index].isascii():
+        img = cv2.imread(os.path.join(self.img_dir, self.img_names[index]))
+        label = self.y[index]
 
         return img, label
 
