@@ -1,6 +1,5 @@
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
 import seaborn as sns
 import matplotlib.pylab as plt
 
@@ -18,7 +17,7 @@ def generate_predictions(model, X, y):
 def calculate_metrics(X_test = None, y_test = None, y_pred = None,
                        model = None, metrics_type='MSE'):
     if metrics_type == 'MSE':
-        return mean_squared_error(y_test, y_pred, multioutput='raw_values')
+        return np.square(np.subtract(y_test, y_pred))
     elif metrics_type == 'R2':
         return model.score(X_test, y_test)
     
@@ -27,9 +26,9 @@ def calculate_metrics(X_test = None, y_test = None, y_pred = None,
 def plot_results(y_pred, y_test, error):
     # Plot y_pred - MSE
     vari = calculate_metrics(y_test=y_test, y_pred=y_pred, metrics_type='MSE')
-    mse = np.array(mse).mean()
+    mse = [np.array(vari).mean()]*len(vari)
     sns.scatterplot(x=y_pred,y=vari)
-    sns.scatterplot(x=mse, y=mse, label = 'MSE mean')
+    sns.lineplot(x=y_pred, y=mse, label = 'MSE mean')
     plt.title('y_pred - MSE')
     plt.xlabel('y_pred')
     plt.ylabel('MSE')

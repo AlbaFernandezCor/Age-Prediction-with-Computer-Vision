@@ -10,15 +10,18 @@ def run():
     # Train
     s = time.time()
     train_dataset = CACDDataset(csv_path=TRAIN_CSV_PATH, img_dir=IMAGE_PATH)
-    print('X y train cargados:',np.round(time.time()-s),'s')
+    print('X y train cargados:', np.round(time.time()-s),'s')
 
     # Test
     s = time.time()
     test_dataset = CACDDataset(csv_path=TEST_CSV_PATH, img_dir=IMAGE_PATH)
-    print('X y test cargados:',np.round(time.time()-s),'s')
+    print('X y test cargados:', np.round(time.time()-s),'s')
 
-    y_pred, error = OldSchoolMethod().run(train_dataset, test_dataset)
-    print("He acabat")
+    s = time.time()
+    OldSchoolMethod().run(train_dataset, test_dataset)
+    print('Fin Old School Method:', np.round(time.time()-s),'s')
+
+    
 
 
 
