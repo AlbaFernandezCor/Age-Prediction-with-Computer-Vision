@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from math import ceil
-from models.utils_models import generate_RFR_model, generate_predictions, plot_results
+from AgePrediction.models.utils_models_oldschool import generate_RFR_model, generate_predictions, plot_results
  
 class OldSchoolMethod():
 
