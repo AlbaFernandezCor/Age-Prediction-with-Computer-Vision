@@ -2,8 +2,9 @@ from models.utils_models_dl import resnet34
 from torch.utils.data import DataLoader
 from HYPERPARAMETERS import BATCH_SIZE
 import torch
+import torch.nn as nn
+import torch.optim as optim
 import math
-from torchvision import transforms
 import tensorflow as tf
 
 GRAYSCALE = False
@@ -18,9 +19,7 @@ else:
 class DeepLearningMethod():
     
     def run(self, train_dataset, test_dataset):
-        transform = transforms.Compose([transforms.Resize((128, 128)),
-                                        transforms.RandomCrop((120, 120)),
-                                        transforms.ToTensor()])
+
         train_loader = DataLoader(dataset=train_dataset,
                                   batch_size=BATCH_SIZE,
                                   shuffle=True,
@@ -34,10 +33,16 @@ class DeepLearningMethod():
 
     def train_loop(self, model, train_loader):
         best_mae, best_rmse, best_epoch = math.inf, math.inf, -1
+        # Definir la función de pérdida
+        criterion = nn.MSELoss()
+
+        # Definir el optimizador
+        optimizer = optim.Adam(model.parameters(), lr=0.001)
         for epoch in range(NUM_EPOCHS):
             model.train()
-
+            running_loss = 0.0
             for batch_idx, tupla in enumerate(train_loader):
+                print(f"Batch: {batch_idx}")
                 features = tupla[0]
                 targets = tupla[1]
 
@@ -45,25 +50,25 @@ class DeepLearningMethod():
                 # targets = targets.to(DEVICE)
 
                 # FORWARD AND BACK PROP
-                logits, probas = model(features)
-                exit()
-                cost = cost_fn(nom_model=LOSS, logits=logits, levels=levels, imp=imp, targets=targets)
+                outputs = model(features)
+                # Calcular la pérdida
+                loss = criterion(outputs.squeeze(), targets.float())  # Squeeze elimina las dimensiones de tamaño 1
+                                                                    # y labels.float() convierte las etiquetas a float
+                
+                # Backward pass y optimización
                 optimizer.zero_grad()
-                cost.backward()
-
-                # UPDATE MODEL PARAMETERS
+                loss.backward()
                 optimizer.step()
-
-                # LOGGING
-                if not batch_idx % 50:
-                    s = ('Epoch: %03d/%03d | Batch %04d/%04d | Cost: %.4f'
-                        % (epoch + 1, num_epochs, batch_idx,
-                            len_train_dataset // BATCH_SIZE, cost))
-                    print(s)
-                    with open(LOGFILE, 'a') as f:
-                        f.write('%s\n' % s)
-
+                
+                running_loss += loss.item() * features.size(0)  # Multiplicamos por el tamaño del lote para tener una pérdida acumulativa
+            
+            # Calcular la pérdida promedio por epoca
+            epoch_loss = running_loss / train_loader.__len__()
+            
+            print(f'Epoch [{epoch+1}/{NUM_EPOCHS}], Loss: {epoch_loss:.4f}')
+            exit()
             model.eval()
+            
             with torch.set_grad_enabled(False):
                 valid_mae, valid_mse = compute_mae_and_mse(model, valid_loader,
                                                         device=DEVICE, nom_model=LOSS)

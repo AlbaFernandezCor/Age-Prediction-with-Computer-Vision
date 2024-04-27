@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+
 
 def conv3x3(in_planes, out_planes, stride=1):
     """3x3 convolution with padding"""
@@ -110,3 +112,6 @@ def resnet34(grayscale):
                    layers=[3, 4, 6, 3],
                    grayscale=grayscale)
     return model
+
+def cost_fn(logits=None, targets=None):
+    return F.cross_entropy(logits, targets)

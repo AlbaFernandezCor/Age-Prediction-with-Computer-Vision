@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import warnings
 import numpy as np
 from math import ceil
+from PIL import Image
+
 
 class CACDDataset():
     """Custom Dataset for loading CACD face images"""
@@ -19,7 +21,9 @@ class CACDDataset():
         self.transform = transform
 
     def __getitem__(self, index):
-        img = cv2.imread(os.path.join(self.img_dir, self.img_names[index]))
+        # img = cv2.imread(os.path.join(self.img_dir, self.img_names[index]))
+        img = Image.open(os.path.join(self.img_dir,
+                                      self.img_names[index]))
         label = self.y[index]
         if self.transform is not None:
             img = self.transform(img)
