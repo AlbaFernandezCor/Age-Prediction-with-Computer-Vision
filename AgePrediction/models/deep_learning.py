@@ -3,9 +3,10 @@ from torch.utils.data import DataLoader
 from HYPERPARAMETERS import BATCH_SIZE
 import torch
 import math
+from torchvision import transforms
 import tensorflow as tf
 
-GRAYSCALE = True
+GRAYSCALE = False
 RANDOM_SEED = 1
 NUM_EPOCHS = 5
 
@@ -17,6 +18,9 @@ else:
 class DeepLearningMethod():
     
     def run(self, train_dataset, test_dataset):
+        transform = transforms.Compose([transforms.Resize((128, 128)),
+                                        transforms.RandomCrop((120, 120)),
+                                        transforms.ToTensor()])
         train_loader = DataLoader(dataset=train_dataset,
                                   batch_size=BATCH_SIZE,
                                   shuffle=True,
