@@ -114,4 +114,5 @@ tarball-master.zip
 CACD2000/*
 CACD200/
 
+# Exclude HYPERPARAMETERS.py
 AgePrediction/HYPERPARAMETERS.py
