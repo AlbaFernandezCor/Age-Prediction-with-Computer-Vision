@@ -24,14 +24,14 @@ class DeepLearningMethod():
                                   batch_size=BATCH_SIZE,
                                   shuffle=True,
                                   num_workers=1)
-        # test_loader = DataLoader(dataset=test_dataset,
-        #                           batch_size=BATCH_SIZE,
-        #                           shuffle=False,
-        #                           num_workers=1)
+        test_loader = DataLoader(dataset=test_dataset,
+                                  batch_size=BATCH_SIZE,
+                                  shuffle=False,
+                                  num_workers=1)
         model = resnet34(GRAYSCALE)
-        self.train_loop(model, train_loader)
+        self.train_loop(model, train_loader, test_loader)
 
-    def train_loop(self, model, train_loader):
+    def train_loop(self, model, train_loader, test_loader):
         best_mae, best_rmse, best_epoch = math.inf, math.inf, -1
         # Definir la función de pérdida
         criterion = nn.MSELoss()
@@ -66,28 +66,34 @@ class DeepLearningMethod():
             epoch_loss = running_loss / train_loader.__len__()
             
             print(f'Epoch [{epoch+1}/{NUM_EPOCHS}], Loss: {epoch_loss:.4f}')
-            exit()
-            model.eval()
-            
-            with torch.set_grad_enabled(False):
-                valid_mae, valid_mse = compute_mae_and_mse(model, valid_loader,
-                                                        device=DEVICE, nom_model=LOSS)
+            # Evaluate model on test set after each epoch
+            test_loss = self.evaluate_model(model, test_loader, criterion)
+            print(f'Test Loss: {test_loss:.4f}')
 
-            if valid_mae < best_mae:
-                best_mae, best_rmse, best_epoch = valid_mae, torch.sqrt(valid_mse), epoch
-                ########## SAVE MODEL #############
-                torch.save(model.state_dict(), os.path.join(PATH, 'best_model.pt'))
+            # Save model if it performs better on the test set
+            if test_loss < best_mae:
+                best_mae = test_loss
+                best_epoch = epoch
+                self.save_model(model, 'best_model.pth')
 
-            s = 'MAE/RMSE: | Current Valid: %.2f/%.2f Ep. %d | Best Valid : %.2f/%.2f Ep. %d' % (
-                valid_mae, torch.sqrt(valid_mse), epoch, best_mae, best_rmse, best_epoch)
-            print(s)
-            with open(LOGFILE, 'a') as f:
-                f.write('%s\n' % s)
+        print(f'Best Test Loss: {best_mae:.4f} at Epoch {best_epoch+1}')
 
-            s = 'Time elapsed: %.2f min' % ((time.time() - start_time) / 60)
-            print(s)
-            with open(LOGFILE, 'a') as f:
-                f.write('%s\n' % s)
-
+    def evaluate_model(self, model, test_loader, criterion):
         model.eval()
+        test_loss = 0.0
+        with torch.no_grad():
+            for batch_idx, tupla in enumerate(test_loader):
+                features = tupla[0]
+                targets = tupla[1]
 
+                outputs = model(features)
+                loss = criterion(outputs.squeeze(), targets.float())
+                
+                test_loss += loss.item() * features.size(0)
+
+        test_loss /= test_loader.__len__()
+        return test_loss
+
+    def save_model(self, model, filename):
+        torch.save(model.state_dict(), filename)
+        print(f'Model saved as {filename}')

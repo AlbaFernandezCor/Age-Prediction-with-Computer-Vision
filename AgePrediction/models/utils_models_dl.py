@@ -115,3 +115,22 @@ def resnet34(grayscale):
 
 def cost_fn(logits=None, targets=None):
     return F.cross_entropy(logits, targets)
+
+def compute_mae_and_mse(model, data_loader, device, nom_model):
+    mae, mse, num_examples = 0, 0, 0
+    for i, tupla in enumerate(data_loader):
+        features = tupla[0]
+        targets = tupla[1]
+        
+        # features = features.to(device)
+        # targets = targets.to(device)
+
+        logits, probas = model(features)
+        _, predicted_labels = torch.max(probas, 1)
+
+        num_examples += targets.size(0)
+        mae += torch.sum(torch.abs(predicted_labels - targets))
+        mse += torch.sum((predicted_labels - targets) ** 2)
+    mae = mae.float() / num_examples
+    mse = mse.float() / num_examples
+    return mae, mse
