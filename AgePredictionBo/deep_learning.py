@@ -11,7 +11,7 @@ class DeepLearning():
         train_img = self.image_preparation(train_df)
         test_img = self.image_preparation(test_df, True)
         valid_img = self.image_preparation(valid_df)
-        model = CNNRegressor().model2()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
+        model = CNNRegressor().model1()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
         model = self.train_loop(model, train_img, valid_img)
         self.metrics(model, test_img)
 
@@ -54,7 +54,7 @@ class DeepLearning():
         history = model.fit(
             train_img,
             validation_data=valid_img,
-            epochs=1,
+            epochs=100,
             callbacks=[
                 tf.keras.callbacks.EarlyStopping(
                     monitor='val_loss',
