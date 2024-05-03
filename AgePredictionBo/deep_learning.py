@@ -3,6 +3,7 @@ from sklearn.metrics import r2_score
 from models.cnn import CNNRegressor
 import tensorflow as tf
 import numpy as np
+import os
 
 class DeepLearning():
 
@@ -62,6 +63,8 @@ class DeepLearning():
                 )
             ]
         )
+
+        model.save(os.path.join('AgePredictionBo/models/checkpoints/', 'model_trained'), save_format='tf')
 
         return model
     
