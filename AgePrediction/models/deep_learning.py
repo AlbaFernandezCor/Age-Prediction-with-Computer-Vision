@@ -71,6 +71,7 @@ class DeepLearningMethod():
 
                 # FORWARD AND BACK PROP
                 outputs = model(features)
+                print(outputs)
                 # Calcular la pérdida
                 loss = criterion(outputs.squeeze(), targets.float())  # Squeeze elimina las dimensiones de tamaño 1
                                                                     # y labels.float() convierte las etiquetas a float
