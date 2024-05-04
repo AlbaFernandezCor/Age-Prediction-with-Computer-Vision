@@ -116,3 +116,8 @@ CACD200/
 
 # Exclude HYPERPARAMETERS.py
 AgePredictionBo/HYPERPARAMETERS.py
+
+
+# Exclude models loaded
+AgePredictionBo/models/checkpoints/*
+AgePredictionBo/models/checkpoints/

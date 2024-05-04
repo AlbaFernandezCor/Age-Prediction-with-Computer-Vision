@@ -5,6 +5,7 @@ import tensorflow as tf
 import numpy as np
 import os
 
+
 class DeepLearning():
 
     def run(self, train_df, test_df, valid_df):
@@ -16,55 +17,57 @@ class DeepLearning():
         self.metrics(model, test_img)
 
     def image_preparation(self, df, df_test=None):
-        image_generator = tf.keras.preprocessing.image.ImageDataGenerator(
-            rescale=1./255
-        )
-        if df_test:
-            df_images = image_generator.flow_from_dataframe(
-                dataframe=df,
-                x_col='file',
-                y_col='age',
-                target_size=TARGET_SIZE,
-                color_mode='rgb',
-                class_mode='raw',
-                batch_size=32,
-                shuffle=False
-            )
-        else:
-            df_images = image_generator.flow_from_dataframe(
-                dataframe=df,
-                x_col='file',
-                y_col='age',
-                target_size=TARGET_SIZE,
-                color_mode='rgb',
-                class_mode='raw',
-                batch_size=32,
-                shuffle=True,
-                seed=42
-            )
+        with tf.device('GPU'):
+            image_generator = tf.keras.preprocessing.image.ImageDataGenerator(
+                rescale=1./255
+                )
+            if df_test:
+                df_images = image_generator.flow_from_dataframe(
+                    dataframe=df,
+                    x_col='file',
+                    y_col='age',
+                    target_size=TARGET_SIZE,
+                    color_mode='rgb',
+                    class_mode='raw',
+                    batch_size=64,
+                    shuffle=False
+                )
+            else:
+                df_images = image_generator.flow_from_dataframe(
+                    dataframe=df,
+                    x_col='file',
+                    y_col='age',
+                    target_size=TARGET_SIZE,
+                    color_mode='rgb',
+                    class_mode='raw',
+                    batch_size=64,
+                    shuffle=True,
+                    seed=42
+                )
         return df_images
     
         
     def train_loop(self, model, train_img, valid_img):
-        model.compile(
-            optimizer='adam',
-            loss='mse'
-        )
+        with tf.device('GPU'):
+            model.compile(
+                optimizer='adam',
+                loss='mse'
+            )
 
-        history = model.fit(
-            train_img,
-            validation_data=valid_img,
-            epochs=100,
-            callbacks=[
-                tf.keras.callbacks.EarlyStopping(
-                    monitor='val_loss',
-                    patience=5,
-                    restore_best_weights=True
-                )
-            ]
-        )
+            history = model.fit(
+                train_img,
+                validation_data=valid_img,
+                epochs=100,
+                callbacks=[
+                    tf.keras.callbacks.EarlyStopping(
+                        monitor='val_loss',
+                        patience=5,
+                        restore_best_weights=True
+                    )
+                ]
+            )
 
-        model.save(os.path.join('AgePredictionBo/models/checkpoints/', 'model_trained'), save_format='tf')
+            model.save(os.path.join('AgePredictionBo/models/checkpoints/', 'model_trained.keras'))
 
         return model
     
