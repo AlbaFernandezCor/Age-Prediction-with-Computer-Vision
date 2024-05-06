@@ -33,14 +33,18 @@ class OldSchoolMethod():
 
     def preprocesing_Xy(self, df):
         X_list = []
+        y_list = []
         for index in range(len(df)):
             descriptors = self.extract_sift_features(np.array(Image.open(df.iloc[index]['file'])))
-            X_list.append(np.concatenate(descriptors, axis=0)[:1000])
-            if (index % 5000 == 0):
-                print("Index img: ", index)
+            if descriptors is not None:
+                X_list.append(np.concatenate(descriptors, axis=0)[:5000])
+                y_list.append(df.iloc[index]['age'])
+                if (index % 5000 == 0):
+                    print("Index img: ", index)
+            else:
+                print(df.iloc[index]['file'])
 
-        assert len(X_list) == len(df['age']), "Les longituds de Imatges i edats no son iguals!"
-        return np.array(X_list), np.array(df['age'])
+        return np.array(X_list), np.array(y_list)
 
 
     def generate_predictions(self, model, X, y):
