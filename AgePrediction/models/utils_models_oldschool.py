@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pylab as plt
 
 def generate_RFR_model(X_train, y_train):
-    model = RandomForestRegressor()
+    model = RandomForestRegressor(n_jobs=-1)
     model.fit(np.array(X_train), np.array(y_train))
     return model
 

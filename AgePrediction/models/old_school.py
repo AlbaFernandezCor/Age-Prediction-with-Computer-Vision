@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from math import ceil
-from AgePrediction.models.utils_models_oldschool import generate_RFR_model, generate_predictions, plot_results
+from models.utils_models_oldschool import generate_RFR_model, generate_predictions, plot_results
  
 class OldSchoolMethod():
 
@@ -25,7 +25,7 @@ class OldSchoolMethod():
         y_list = []
         for index in range(ceil(dataset.__len__()*0.01)):
             img, age = dataset.__getitem__(index)
-            descriptors = self.extract_sift_features(img)
+            descriptors = self.extract_sift_features(np.array(img))
             y_list.append(age)
             X_list.append(np.array(np.concatenate(descriptors, axis=0).tolist())[:1000])
             if (index % 50 == 0):
