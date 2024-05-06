@@ -5,6 +5,8 @@ import joblib
 from models.utils import plot_results
 from models.rf import RandomForest
 from PIL import Image
+import pandas as pd
+from math import ceil
  
 class OldSchoolMethod():
 
@@ -37,14 +39,22 @@ class OldSchoolMethod():
         for index in range(len(df)):
             descriptors = self.extract_sift_features(np.array(Image.open(df.iloc[index]['file'])))
             if descriptors is not None:
-                X_list.append(np.concatenate(descriptors, axis=0)[:5000])
+                X_list.append(np.concatenate(descriptors, axis=0))
                 y_list.append(df.iloc[index]['age'])
                 if (index % 5000 == 0):
                     print("Index img: ", index)
-            else:
-                print(df.iloc[index]['file'])
 
-        return np.array(X_list), np.array(y_list)
+        X_array, y_array = self.modify_descriptors(X_list, y_list)
+        
+        return X_array, y_array
+
+    
+    def modify_descriptors(self, X_list, y_list):
+        df = pd.DataFrame({'l1':X_list, 'len_l1': list(map(len, X_list)), 'l2':y_list})
+        min_len = np.percentile(df['len_l1'],60)
+        df2 = df[df['len_l1'] >= min_len].reset_index(drop=True)
+        df2['l1_short'] = df2['l1'].apply(lambda x: x[:ceil(min_len)])
+        return np.array(df2['l1_short']), np.array(df2['l2'])
 
 
     def generate_predictions(self, model, X, y):
