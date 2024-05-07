@@ -16,6 +16,9 @@ class DeepLearning():
         model = self.train_loop(model, train_img, valid_img)
         self.metrics(model, test_img)
 
+    def load_model(self):
+        return tf.keras.models.load_model('AgePredictionBo/models/checkpoints/model_trained.h5')
+
     def image_preparation(self, df, df_test=None):
         with tf.device('GPU'):
             image_generator = tf.keras.preprocessing.image.ImageDataGenerator(
