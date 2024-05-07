@@ -67,7 +67,7 @@ class DeepLearning():
                 ]
             )
 
-            model.save(os.path.join('AgePredictionBo/models/checkpoints/', 'model_trained.keras'))
+            model.save(os.path.join('AgePredictionBo/models/checkpoints/', 'model_trained.h5'))
 
         return model
     
