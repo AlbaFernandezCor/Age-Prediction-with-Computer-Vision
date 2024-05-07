@@ -11,7 +11,7 @@ from math import ceil
 class OldSchoolMethod():
 
     def run(self, train_dataset, test_dataset, model_loaded = None):
-        if model_loaded:
+        if model_loaded: # hola alba
             model = self.model_load()
             print('Preparant les dades de test...')
             X_test_preprocess, y_test_preprocess = self.preprocesing_Xy(test_dataset)

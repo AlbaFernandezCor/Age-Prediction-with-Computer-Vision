@@ -17,8 +17,8 @@ def plot_results(y_pred, y_test, error):
     # Plot y_pred - MSE
     vari = calculate_metrics(y_test=y_test, y_pred=y_pred, metrics_type='MSE')
     mse = [np.array(vari).mean()]*len(vari)
-    sns.scatterplot(x=y_pred,y=vari)
-    sns.lineplot(x=y_pred, y=mse, label = 'MSE mean')
+    sns.scatterplot(x=y_test,y=vari)
+    sns.lineplot(x=y_test, y=mse, label = 'MSE mean')
     plt.title('y_pred - MSE')
     plt.xlabel('y_pred')
     plt.ylabel('MSE')
