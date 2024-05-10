@@ -121,3 +121,7 @@ AgePredictionBo/HYPERPARAMETERS.py
 # Exclude models loaded
 AgePredictionBo/models/checkpoints/*
 AgePredictionBo/models/checkpoints/
+
+# Exclude ImgRed
+ImgRed/*
+ImgRed/

@@ -14,11 +14,11 @@ class CACDDataset():
     def loadcsv(self, path_img):
         df = pd.read_csv(path_img, index_col=0)
         df = df.reset_index(drop=True)
-        df['file'] = df['file'].apply(lambda x: os.path.join(IMAGE_PATH,x))
+        # df['file'] = df['file'].apply(lambda x: os.path.join(IMAGE_PATH,x))
         return df
 
     def getitem(self, index, df):
-        img = Image.open(df.iloc[index]['file'])
+        img = Image.open(os.path.join(IMAGE_PATH, df.iloc[index]['file']))
         label = df.iloc[index]['age']
         return img, label
 
