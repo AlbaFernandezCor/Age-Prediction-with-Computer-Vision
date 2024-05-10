@@ -4,17 +4,21 @@ from models.cnn import CNNRegressor
 import tensorflow as tf
 import numpy as np
 import os
+from models.utils import plot_results
+from tensorflow.keras.models import load_model
 
 
 class DeepLearning():
 
     def run(self, train_df, test_df, valid_df):
-        train_img = self.image_preparation(train_df)
+        # train_img = self.image_preparation(train_df)
         test_img = self.image_preparation(test_df, True)
-        valid_img = self.image_preparation(valid_df)
-        model = CNNRegressor().model1()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
-        model = self.train_loop(model, train_img, valid_img)
-        self.metrics(model, test_img)
+        # valid_img = self.image_preparation(valid_df)
+        # model = CNNRegressor().model1()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
+        # # model = self.train_loop(model, train_img, valid_img)
+        model = self.load_model()
+        y_pred, y_real = self.metrics(model, test_img)
+        plot_results(y_pred, y_real, np.abs(y_pred - y_real))
 
     def load_model(self):
         return tf.keras.models.load_model('AgePredictionBo/models/checkpoints/model_trained.h5')
@@ -69,7 +73,6 @@ class DeepLearning():
                     )
                 ]
             )
-
             model.save(os.path.join('AgePredictionBo/models/checkpoints/', 'model_trained.h5'))
 
         return model
@@ -83,3 +86,5 @@ class DeepLearning():
 
         r2 = r2_score(true_ages, predicted_ages)
         print("Test R^2 Score: {:.5f}".format(r2))
+
+        return predicted_ages, true_ages

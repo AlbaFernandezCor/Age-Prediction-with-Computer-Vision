@@ -123,6 +123,6 @@ AgePredictionBo/models/checkpoints/*
 AgePredictionBo/models/checkpoints/
 
 # Exclude ImgRed
-ImgRed/*
-ImgRed/
+ImgReduit/*
+ImgReduit/
 *.pkl

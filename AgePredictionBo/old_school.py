@@ -36,7 +36,11 @@ class OldSchoolMethod():
         sift = cv2.SIFT_create()
         _, descriptors = sift.detectAndCompute(gray_image, None)
         return descriptors
-    
+
+    def extract_harris_features(self, image): # CANVIAR!
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        harris = cv2.cornerHarris(gray_image,2,3,0.04)
+        return harris
 
     def preprocesing_Xy(self, df):
         X_list = []
