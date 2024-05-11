@@ -2,7 +2,6 @@ import cv2
 from PIL import Image
 import numpy as np
 from mtcnn import MTCNN
-import pickle
 import joblib
 
 # load face detector
