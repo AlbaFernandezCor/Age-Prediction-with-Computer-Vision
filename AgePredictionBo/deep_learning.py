@@ -11,17 +11,17 @@ from tensorflow.keras.models import load_model
 class DeepLearning():
 
     def run(self, train_df, test_df, valid_df):
-        # train_img = self.image_preparation(train_df)
+        train_img = self.image_preparation(train_df)
         test_img = self.image_preparation(test_df, True)
-        # valid_img = self.image_preparation(valid_df)
-        # model = CNNRegressor().model1()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
-        # # model = self.train_loop(model, train_img, valid_img)
-        model = self.load_model()
+        valid_img = self.image_preparation(valid_df)
+        model = CNNRegressor().model2()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
+        model = self.train_loop(model, train_img, valid_img)
+        # model = self.load_model()
         y_pred, y_real = self.metrics(model, test_img)
         plot_results(y_pred, y_real, np.abs(y_pred - y_real))
 
     def load_model(self):
-        return tf.keras.models.load_model('AgePredictionBo/models/checkpoints/model_trained.h5')
+        return tf.keras.models.load_model('/content/models/checkpoints/model_trained.h5')
 
     def image_preparation(self, df, df_test=None):
         with tf.device('GPU'):
@@ -73,7 +73,7 @@ class DeepLearning():
                     )
                 ]
             )
-            model.save(os.path.join('AgePredictionBo/models/checkpoints/', 'model_trained.h5'))
+            model.save(os.path.join('/content/models/checkpoints/', 'model_trained.h5'))
 
         return model
     

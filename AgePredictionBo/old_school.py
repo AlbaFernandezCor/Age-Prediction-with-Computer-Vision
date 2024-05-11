@@ -45,12 +45,14 @@ class OldSchoolMethod():
     def preprocesing_Xy(self, df):
         X_list = []
         y_list = []
+        img_log = ceil(len(df)*0.05)
+        print(img_log)
         for index in range(len(df)):
             descriptors = self.extract_sift_features(np.array(Image.open(df.iloc[index]['file'])))
             if descriptors is not None:
                 X_list.append(np.array(np.concatenate(descriptors, axis=0).tolist()))
                 y_list.append(df.iloc[index]['age'])
-                if (index % 5000 == 0):
+                if (index % img_log == 0):
                     print("Index img: ", index)
 
         return X_list, y_list
@@ -78,7 +80,7 @@ class OldSchoolMethod():
         return y_pred, errors
     
     def model_save(self, model):
-        joblib.dump(model, 'AgePredictionBo/models/checkpoints/modelRF_trained.joblib', compress=3)
+        joblib.dump(model, '/content/models/checkpoints/modelRF_trained.joblib', compress=3)
 
     def model_load(self):
-        return joblib.load('AgePredictionBo/models/checkpoints/modelRF_trained.joblib')
+        return joblib.load('/content/models/checkpoints/modelRF_trained.joblib')
