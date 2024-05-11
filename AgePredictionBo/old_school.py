@@ -80,7 +80,7 @@ class OldSchoolMethod():
         return y_pred, errors
     
     def model_save(self, model):
-        joblib.dump(model, '/content/models/checkpoints/modelRF_trained.joblib', compress=3)
+        joblib.dump(model, 'AgePredictionBo/models/checkpoints/modelRF_trained.joblib', compress=3)
 
     def model_load(self):
-        return joblib.load('/content/models/checkpoints/modelRF_trained.joblib')
+        return joblib.load('AgePredictionBo/models/checkpoints/modelRF_trained.joblib')

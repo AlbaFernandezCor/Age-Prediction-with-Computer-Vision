@@ -28,7 +28,7 @@ class ImagePreparing():
             cacd_img = os.path.join(IMAGE_PATH, img_name)
             if os.path.isfile(cacd_img):
                 shutil.copy(cacd_img, REDUCED_PATH)
-                df.loc[df['file']==img_name,'file'] = os.path.join("/content/ImgRed/", img_name)
+                df.loc[df['file']==img_name,'file'] = os.path.join(REDUCED_PATH, img_name)
         
         return df
     
