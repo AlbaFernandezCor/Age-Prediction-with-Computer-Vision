@@ -1,4 +1,7 @@
 import tensorflow as tf
+import torch
+import torch.nn as nn
+from torchvision import models
 
 class CNNRegressor():
 
@@ -46,3 +49,18 @@ class CNNRegressor():
         output = tf.keras.layers.Dense(1, activation='linear', name='age')(dense)
         model = tf.keras.Model(input, output)
         return model
+    
+
+class AgeRegressionModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.model = models.resnext101_32x8d(pretrained=True)
+        self.model.fc = nn.Linear(512 * 4, 1)
+
+    def forward(self, x: torch.Tensor):
+        x_age = self.model(x)
+        return x_age
+      
+#Model 2
+#Provar codi del link https://mohameddhaoui.github.io/deeplearning/Age_detection/
+    

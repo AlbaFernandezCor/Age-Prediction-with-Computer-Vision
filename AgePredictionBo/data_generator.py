@@ -18,7 +18,7 @@ class CACDDataset():
         return df
 
     def getitem(self, index, df):
-        img = Image.open(os.path.join(IMAGE_PATH, df.iloc[index]['file']))
+        img = Image.open(df.iloc[index]['file'])
         label = df.iloc[index]['age']
         return img, label
 
