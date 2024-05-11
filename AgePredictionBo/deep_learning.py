@@ -6,19 +6,32 @@ import numpy as np
 import os
 from models.utils import plot_results
 from tensorflow.keras.models import load_model
-
+from models.cnn import AgeRegressionModel
+from torchvision import transforms
+import torch
+from PIL import Image
 
 class DeepLearning():
 
     def run(self, train_df, test_df, valid_df):
-        train_img = self.image_preparation(train_df)
-        test_img = self.image_preparation(test_df, True)
-        valid_img = self.image_preparation(valid_df)
-        model = CNNRegressor().model2()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
-        model = self.train_loop(model, train_img, valid_img)
+        # train_img = self.image_preparation(train_df)
+        # test_img = self.image_preparation(test_df, True)
+        # valid_img = self.image_preparation(valid_df)
+        # model = CNNRegressor().model1()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
+        # # model = self.train_loop(model, train_img, valid_img)
         # model = self.load_model()
-        y_pred, y_real = self.metrics(model, test_img)
-        plot_results(y_pred, y_real, np.abs(y_pred - y_real))
+        
+        # MODEL PRETRAINED
+        model = AgeRegressionModel()
+        img = Image.open(test_df['file'][31058])
+        transformacion = transforms.ToTensor()
+        imagen_tensor = transformacion(img)
+        y_pred = model.forward(torch.tensor(imagen_tensor.unsqueeze(0)))
+        print(y_pred)
+
+        # RESULTS
+        # y_pred, y_real = self.metrics(model, test_img)
+        # plot_results(y_pred, y_real, np.abs(y_pred - y_real))
 
     def load_model(self):
         return tf.keras.models.load_model('/content/models/checkpoints/model_trained.h5')

@@ -7,8 +7,11 @@ class ImagePreparing():
     def run(self, train_df, test_df, valid_df, num_img = 1000):
         percent_of_dfs = num_img/len(train_df)
         train_df = self.get_random_img(train_df, percent_of_dfs)
+        train_df = train_df.reset_index(drop=True)
         test_df = self.get_random_img(test_df, percent_of_dfs)
+        test_df = test_df.reset_index(drop=True)
         valid_df = self.get_random_img(valid_df, percent_of_dfs)
+        valid_df = valid_df.reset_index(drop=True)
         self.save_df(train_df, test_df, valid_df)
         return train_df, test_df, valid_df
 
