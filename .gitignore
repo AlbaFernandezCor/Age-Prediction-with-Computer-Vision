@@ -126,3 +126,7 @@ AgePredictionBo/models/checkpoints/
 ImgReduit/*
 ImgReduit/
 *.pkl
+
+# Exclude Archive Dataset
+archive/*
+archive/
