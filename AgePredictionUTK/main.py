@@ -6,9 +6,9 @@ from deep_learning import DeepLearning
 
 def run():
     print('Creem els dataframes')
-    train_df_age, test_df_age, train_df_gender, test_df_gender = UTKDataset().run()
+    train_df_age_complet, test_df_age_complet, train_df_gender, test_df_gender = UTKDataset().run()
     print("Creem un set reduit d'imatges")
-    # train_df_age, test_df_age = ImagePreparing().run(train_df_age, test_df_age, df_type = 'age', num_img = 1000)
+    train_df_age, test_df_age = ImagePreparing().run(train_df_age_complet, test_df_age_complet, df_type = 'age', num_img = 1000)
     # train_df_gender, test_df_gender = ImagePreparing().run(train_df_gender, test_df_gender, df_type = 'gender', num_img = 1000)
 
     with tf.device('GPU'):

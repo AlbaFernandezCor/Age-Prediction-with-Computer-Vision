@@ -5,7 +5,6 @@ import tensorflow as tf
 import numpy as np
 import os
 from models.utils import plot_results
-from tensorflow.keras.models import load_model
 from models.cnn import AgeRegressionModel
 from torchvision import transforms
 import torch
@@ -17,7 +16,7 @@ class DeepLearning():
         train_img = self.image_preparation(train_df, df_type)
         test_img = self.image_preparation(test_df, df_type, True)
         model = CNNRegressor().model1()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
-        model = self.train_loop(model, train_img)
+        model = self.train_loop2(model, train_img, test_img)
         # model = self.load_model()
         
         # RESULTS
@@ -79,6 +78,14 @@ class DeepLearning():
             model.save(os.path.join('AgePredictionUTK/models/checkpoints/', 'model_trained_cnn.h5'))
 
         return model
+    
+    def train_loop2(self, age_model, train_img, test_img):
+        age_model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+        print(age_model.summary())              
+                                
+        history_age = age_model.fit(train_img, validation_data=test_img, epochs=10)
+
+        age_model.save('age_model_50epochs.h5')
     
     def metrics(self, model, test_img):
         predicted_ages = np.squeeze(model.predict(test_img))

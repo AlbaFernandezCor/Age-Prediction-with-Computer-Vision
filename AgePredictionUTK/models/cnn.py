@@ -2,6 +2,8 @@ import tensorflow as tf
 import torch
 import torch.nn as nn
 from torchvision import models
+from keras.models import Sequential,load_model,Model
+from keras.layers import Conv2D,MaxPool2D,Dense,Dropout,BatchNormalization,Flatten,Input
 
 class CNNRegressor():
 
@@ -50,6 +52,34 @@ class CNNRegressor():
         model = tf.keras.Model(input, output)
         return model
     
+    def model3(self, x_train_age, y_train_age, x_test_age, y_test_age):
+        age_model = Sequential()
+        age_model.add(Conv2D(128, kernel_size=3, activation='relu', input_shape=(200,200,3)))
+        #age_model.add(Conv2D(128, kernel_size=3, activation='relu'))
+        age_model.add(MaxPool2D(pool_size=3, strides=2))
+
+        age_model.add(Conv2D(128, kernel_size=3, activation='relu'))
+        #age_model.add(Conv2D(128, kernel_size=3, activation='relu'))
+        age_model.add(MaxPool2D(pool_size=3, strides=2))
+                    
+        age_model.add(Conv2D(256, kernel_size=3, activation='relu'))
+        #age_model.add(Conv2D(256, kernel_size=3, activation='relu'))
+        age_model.add(MaxPool2D(pool_size=3, strides=2))
+
+        age_model.add(Conv2D(512, kernel_size=3, activation='relu'))
+        #age_model.add(Conv2D(512, kernel_size=3, activation='relu'))
+        age_model.add(MaxPool2D(pool_size=3, strides=2))
+
+        age_model.add(Flatten())
+        age_model.add(Dropout(0.2))
+        age_model.add(Dense(512, activation='relu'))
+
+        age_model.add(Dense(1, activation='linear', name='age'))
+
+        return age_model
+                    
+
+    
 
 class AgeRegressionModel(nn.Module):
     def __init__(self):
@@ -63,4 +93,3 @@ class AgeRegressionModel(nn.Module):
       
 #Model 2
 #Provar codi del link https://mohameddhaoui.github.io/deeplearning/Age_detection/
-    
