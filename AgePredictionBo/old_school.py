@@ -67,7 +67,7 @@ class OldSchoolMethod():
         else:
             df_train = pd.DataFrame({'X':X_train, 'len_X': list(map(len, X_train)), 'y':y_train})
             df_test = pd.DataFrame({'X':X_test, 'len_X': list(map(len, X_test)), 'y':y_test})
-            minim_val = min(np.percentile(df_train['len_X'], 60), np.percentile(df_test['len_X'], 60))
+            minim_val = 1000 #min(np.percentile(df_train['len_X'], 60), np.percentile(df_test['len_X'], 60))
             df_train2 = df_train[df_train['len_X'] >= minim_val].reset_index(drop=True)
             df_train2['X_short'] = df_train2['X'].apply(lambda x: x[:ceil(minim_val)])
             df_test2 = df_test[df_test['len_X'] >= minim_val].reset_index(drop=True)
