@@ -9,8 +9,6 @@ class RandomForest():
         model = RandomForestRegressor(n_jobs=-1)
         model.fit(X_train, y_train)
         return model
-    
-    # MODEL 2: light GBM regressor
 
 
     

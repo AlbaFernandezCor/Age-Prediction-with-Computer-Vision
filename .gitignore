@@ -116,13 +116,20 @@ CACD200/
 
 # Exclude HYPERPARAMETERS.py
 AgePredictionBo/HYPERPARAMETERS.py
+AgePredictionUTK/HYPERPARAMETERS.py
 
 
 # Exclude models loaded
 AgePredictionBo/models/checkpoints/*
 AgePredictionBo/models/checkpoints/
+AgePredictionUTK/models/checkpoints/*
+AgePredictionUTK/models/checkpoints/
 
 # Exclude ImgRed
 ImgReduit/*
 ImgReduit/
 *.pkl
+
+# Exclude Archive Dataset
+archive/*
+archive/
