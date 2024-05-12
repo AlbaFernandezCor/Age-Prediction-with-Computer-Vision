@@ -13,6 +13,7 @@ def run():
 
     with tf.device('GPU'):
         # OldSchoolMethod().run(train_df_age, test_df_age, model_loaded = False, df_type='age')
+        train_df_age = train_df_age.query('age < 20 | age > 40')
         DeepLearning().run(train_df_age, test_df_age, df_type='age')
     print("hola")
 

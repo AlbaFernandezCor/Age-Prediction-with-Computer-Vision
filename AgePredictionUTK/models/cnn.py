@@ -52,7 +52,7 @@ class CNNRegressor():
         model = tf.keras.Model(input, output)
         return model
     
-    def model3(self, x_train_age, y_train_age, x_test_age, y_test_age):
+    def model3(self):
         age_model = Sequential()
         age_model.add(Conv2D(128, kernel_size=3, activation='relu', input_shape=(200,200,3)))
         #age_model.add(Conv2D(128, kernel_size=3, activation='relu'))

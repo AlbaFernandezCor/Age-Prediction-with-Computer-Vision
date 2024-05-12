@@ -15,7 +15,7 @@ class DeepLearning():
     def run(self, train_df, test_df, df_type='age'):
         train_img = self.image_preparation(train_df, df_type)
         test_img = self.image_preparation(test_df, df_type, True)
-        model = CNNRegressor().model1()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
+        model = CNNRegressor().model3()  # Canviar HYPERPARAMETERS.TARGET_SIZE model2 --> (224, 224) o model1 --> (120, 120)
         model = self.train_loop2(model, train_img, test_img)
         # model = self.load_model()
         
@@ -86,12 +86,16 @@ class DeepLearning():
         history_age = age_model.fit(train_img, validation_data=test_img, epochs=10)
 
         age_model.save('age_model_50epochs.h5')
+
+        return age_model
     
     def metrics(self, model, test_img):
         predicted_ages = np.squeeze(model.predict(test_img))
         true_ages = test_img.labels
 
         rmse = np.sqrt(model.evaluate(test_img, verbose=0))
+        if len(rmse > 1):
+            rmse = rmse[0]
         print("Test RMSE: {:.5f}".format(rmse))
 
         r2 = r2_score(true_ages, predicted_ages)
